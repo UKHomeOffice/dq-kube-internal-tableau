@@ -60,7 +60,6 @@ spec:
             - --verbose
             - --upstream-timeout
             - 60s
-            - --verbose
             - --upstream-response-header-timeout
             - 60s
 
