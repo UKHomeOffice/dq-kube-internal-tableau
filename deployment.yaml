@@ -1,0 +1,77 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: internaltableau
+spec:
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        name: internaltableau
+    spec:
+      containers:
+        - name: opensslsidekick
+          image: quay.io/ukhomeofficedigital/dq-haproxy-openssl-sidekick:master
+          imagePullPolicy: Always
+          securityContext:
+            runAsNonRoot: true
+          env:
+            - name: HOST
+              value: '10.3.0.11'
+            - name: PORT
+              value: '8081'
+          ports:
+            - containerPort: 5000
+
+        - name: keycloak-proxy
+          ports:
+            - name: http
+              containerPort: 8081
+          image: quay.io/ukhomeofficedigital/go-keycloak-proxy:v2.1.0
+          securityContext:
+            runAsNonRoot: true
+          resources:
+            limits:
+              cpu: 100m
+              memory: 100Mi
+          env:
+            - name: PROXY_CLIENT_ID
+              value: internaltableau
+            - name: PROXY_LISTEN
+              value: 0.0.0.0:8081
+            - name: PROXY_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: internaltableau
+                  key: keycloak_secret
+            - name: PROXY_DISCOVERY_URL
+              valueFrom:
+                secretKeyRef:
+                  name: internaltableau
+                  key: keycloak_discovery_url
+            - name: PROXY_UPSTREAM_URL
+              value: http://127.0.0.1:5000
+          args:
+            - --resources
+            - uri=/*
+            - --enable-logging
+            - --enable-json-logging
+            - --verbose
+
+        - name: proxy
+          image: quay.io/ukhomeofficedigital/nginx-proxy
+          securityContext:
+            runAsNonRoot: true
+          env:
+            - name: PROXY_SERVICE_HOST
+              value: 'http://127.0.0.1'
+            - name: PROXY_SERVICE_PORT
+              value: '8081'
+            - name: LOG_FORMAT_NAME
+              value: 'json'
+            - name: NAXSI_USE_DEFAULT_RULES
+              value: 'FALSE'
+          ports:
+            - name: https
+              containerPort: 10443
