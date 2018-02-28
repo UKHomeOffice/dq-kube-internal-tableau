@@ -58,6 +58,11 @@ spec:
             - --enable-logging
             - --enable-json-logging
             - --verbose
+            - --upstream-timeout
+            - 60s
+            - --verbose
+            - --upstream-response-header-timeout
+            - 60s
 
         - name: proxy
           image: quay.io/ukhomeofficedigital/nginx-proxy
