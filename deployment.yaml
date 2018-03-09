@@ -25,7 +25,7 @@ spec:
             - containerPort: 5000
 
         - name: proxy
-          image: quay.io/ukhomeofficedigital/nginx-proxy
+          image: quay.io/ukhomeofficedigital/nginx-proxy-proxy-redirect
           securityContext:
             runAsNonRoot: true
           env:
@@ -39,6 +39,8 @@ spec:
               value: 'FALSE'
             - name: ENABLE_UUID_PARAM
               value: 'FALSE'
+            - name: PROXY_REDIRECT
+              value: 'https://127.0.0.1:5000 https://$host; proxy_redirect https://{{.URL}}:10443 https://$host'
           ports:
             - name: https
               containerPort: 10443
