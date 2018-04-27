@@ -43,7 +43,7 @@ spec:
               value: 'https://127.0.0.1:5000 https://$host; proxy_redirect https://{{.URL}}:10443 https://$host'
             - name: ADD_NGINX_SERVER_CFG
               value: |
-                proxy_read_timeout  300s;
+                proxy_read_timeout 300s;
           ports:
             - name: https
               containerPort: 10443
