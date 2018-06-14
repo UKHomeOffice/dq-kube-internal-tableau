@@ -20,7 +20,7 @@ spec:
             - name: EXPOSED_PORT
               value: '5000'
             - name: HOST
-              value: '10.3.0.11'
+              value: '10.3.0.100'
             - name: PORT
               value: '8081'
           ports:
@@ -32,7 +32,7 @@ spec:
             runAsNonRoot: true
           env:
             - name: PROXY_SERVICE_HOST
-              value: 'https://10.3.0.11'
+              value: 'https://10.3.0.100'
             - name: PROXY_SERVICE_PORT
               value: '8081'
             - name: LOG_FORMAT_NAME
