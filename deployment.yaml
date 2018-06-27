@@ -16,6 +16,7 @@ spec:
           imagePullPolicy: Always
           securityContext:
             runAsNonRoot: true
+            runAsUser: 1000
           env:
             - name: EXPOSED_PORT
               value: '5000'
@@ -30,6 +31,7 @@ spec:
           image: quay.io/ukhomeofficedigital/nginx-proxy-proxy-redirect
           securityContext:
             runAsNonRoot: true
+            runAsUser: 1000
           env:
             - name: PROXY_SERVICE_HOST
               value: 'https://10.3.0.11'
